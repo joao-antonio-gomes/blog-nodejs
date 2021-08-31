@@ -51,7 +51,8 @@ app.engine('handlebars', handlebars({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
 
 //mongoose
-mongoose.connect('mongodb+srv://joaogomes:superadmin@blog.fbbvt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+
+mongoose.connect(db.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {

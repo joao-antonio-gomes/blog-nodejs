@@ -74,6 +74,10 @@ router.post('/categorias/edit', isAdmin,
                     }
                 })
             })
+            .catch((err) => {
+                req.flash('error_msg', 'Favor preencher todos os campos antes de enviar!')
+                res.redirect(`/admin/categorias/edit/${req.body.id}`)
+            })
     })
 
 
@@ -195,7 +199,7 @@ router.get('/postagens/edit/:id', isAdmin, (req, res) => {
                 conteudo: postagem.conteudo,
                 categoria: postagem.categoria,
                 slug: postagem.slug,
-                categorias: categorias
+                categorias: categorias,
             })
         })
             .catch((err) => {
@@ -244,6 +248,10 @@ router.post('/postagens/edit', isAdmin,
                         res.redirect('/admin/postagens')
                     })
             })
+                .catch((err) => {
+                    req.flash('error_msg', 'Houve um erro ao buscar as postagens, tente novamente!')
+                    res.redirect('/admin/postagens')
+                })
         }
     })
 
