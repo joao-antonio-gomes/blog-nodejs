@@ -35,6 +35,7 @@ app.use((req, res, next) => {
     res.locals.user = req.user || null
     if (req.user != undefined) {
         res.locals.ehAdmin = req.user.ehAdmin === 1 ? true : false
+        res.locals.username = req.user.nome
     }
     next()
 })

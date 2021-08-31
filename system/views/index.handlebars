@@ -1,9 +1,11 @@
-<div class=" p-5 bg-light border rounded-3">
+<div class="p-3 bg-light border rounded-3">
     <h2>Bem vindo ao blog!</h2>
     <p class="fs-4 fw-light">Este é um blog simples, desenvolvido com Node.js, Express e MongoDB.</p>
     <hr>
     <p>Aqui você pode ler notícias e novidades sobre o mundo da programação.</p>
-    <a class="btn btn-primary" type="button">Crie uma conta</a>
+    {{#unless user}}
+        <a class="btn btn-primary" href="/usuarios/registro" type="button">Crie uma conta</a>
+    {{/unless}}
 </div>
 <hr>
 <h2>Postagens recentes</h2>
