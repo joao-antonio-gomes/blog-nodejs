@@ -13,5 +13,23 @@
   },
   "devDependencies": {
     "handlebars": "^4.5.0"
-  }
+  },
+  "name": "blognodejs",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joao-antonio-gomes/blog-nodejs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joao-antonio-gomes/blog-nodejs/issues"
+  },
+  "homepage": "https://github.com/joao-antonio-gomes/blog-nodejs#readme",
+  "description": ""
 }

@@ -15,6 +15,7 @@ require('./system/models/CategoriaModel')
 const Categoria = mongoose.model('categorias')
 const passport = require('passport')
 require('./config/auth')(passport)
+const db = require('./config/db')
 
 //sessão
 app.use(session({
@@ -50,7 +51,7 @@ app.engine('handlebars', handlebars({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
 
 //mongoose
-mongoose.connect('mongodb://localhost/blogapp', {
+mongoose.connect(db.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
@@ -133,7 +134,7 @@ app.get('/404', (req, res) => {
 app.use('/admin', admin)
 app.use('/usuarios', usuarios)
 
-const port = 3000
+const port = process.env.PORT || 3000
 app.listen(port, () => {
     console.log('Servidor iniciado! http://localhost:3000/')
 })
