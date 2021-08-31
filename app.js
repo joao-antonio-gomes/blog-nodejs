@@ -51,8 +51,7 @@ app.engine('handlebars', handlebars({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
 
 //mongoose
-const port = process.env.PORT || 3000;
-mongoose.connect(port, {
+mongoose.connect('mongodb+srv://joaogomes:superadmin@blog.fbbvt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
