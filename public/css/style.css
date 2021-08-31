@@ -3,6 +3,17 @@ html, body {
     width: 100vw;
 }
 
+.list-group-item a {
+    text-decoration: none !important;
+    transition: all .5s ease-in-out;
+    color: #000000;
+}
+
+.list-group-item a:hover {
+    transition: all .5s ease-in-out;
+    color: rgba(0,0,0,0.53);
+}
+
 .footer-page {
     width: 100vw !important;
 

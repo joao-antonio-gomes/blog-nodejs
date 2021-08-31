@@ -3,11 +3,16 @@ const handlebars = require('express-handlebars')
 const bodyParser = require('body-parser')
 const app = express()
 const admin = require('./system/routes/admin')
+const usuarios = require('./system/routes/usuarios')
 const home = require('./system/routes/home')
 const path = require('path')
 const mongoose = require('mongoose')
 const session = require("express-session")
 const flash = require("connect-flash")
+require('./system/models/PostagemModel')
+const Postagem = mongoose.model('postagens')
+require('./system/models/CategoriaModel')
+const Categoria = mongoose.model('categorias')
 
 //sessão
 app.use(session({
@@ -46,8 +51,76 @@ mongoose.connect('mongodb://localhost/blogapp', {
 app.use(express.static(path.join(__dirname, 'public')))
 
 //rotas
-app.use('/', home)
+app.get('/', (req, res) => {
+    Postagem.find().populate('categoria').sort({data: 'desc'}).lean()
+        .then((postagens) => {
+            res.render('index', {postagens: postagens})
+        })
+        .catch((err) => {
+            req.flash('error_msg', "Não foi possível carregar as postagens, erro interno")
+            res.redirect('/404')
+        })
+})
+
+app.get('/postagem/:slug', (req, res) => {
+    Postagem.findOne({slug: req.params.slug}).populate('categoria').lean()
+        .then((postagem) => {
+            if(postagem) {
+                res.render('postagem/index', {
+                    postagem: postagem
+                })
+            } else {
+                req.flash('error_msg', "Esta postagem não existe")
+                res.redirect('/')
+            }
+        })
+        .catch((err) => {
+            req.flash('error_msg', "Não foi possível carregar a postagem, erro interno")
+            res.redirect('/')
+        })
+})
+
+app.get('/categorias', (req, res) => {
+    Categoria.find().sort({date: 'asc'}).lean()
+        .then(categorias => {
+            res.render('categorias/index', {categorias: categorias})
+        })
+        .catch((err) => {
+            req.flash('error_msg', "Não foi possível listar as categorias, erro interno")
+            res.redirect('/')
+        })
+})
+
+app.get('/categorias/:slug', (req, res) => {
+    Categoria.findOne({slug: req.params.slug})
+        .then(categoria => {
+            if (categoria) {
+            Postagem.find({categoria: categoria._id}).sort({date: 'asc'}).lean()
+                .then(postagens => {
+                    console.log(categoria)
+                    res.render('postagem/categoria', {postagens: postagens, categoria: categoria})
+                })
+                .catch((err) => {
+                    req.flash('error_msg', "Houve um erro interno ao listar os posts")
+                    res.redirect('/categorias')
+                })
+            } else {
+                req.flash('error_msg', "Esta categoria não existe")
+                res.redirect('/categorias')
+            }
+        })
+        .catch((err) => {
+            req.flash('error_msg', "Houve um erro interno ao buscar por essa categoria")
+            res.redirect('/categorias')
+        })
+})
+
+app.get('/404', (req, res) => {
+    res.send('Erro 404!')
+})
+
 app.use('/admin', admin)
+app.use('/usuarios', usuarios)
 
 const port = 3000
 app.listen(port, () => {

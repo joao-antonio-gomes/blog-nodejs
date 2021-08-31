@@ -1,0 +1,10 @@
+{{#each postagens}}
+    <div class="p-3 bg-light border rounded-3">
+        <h2>{{titulo}}</h2>
+        <p class="fs-5 fw-light">{{descricao}}</p>
+        <p class="fs-6">{{conteudo}}</p>
+        <hr class="mt-4">
+        <small>Categoria: {{categoria.nome}}</small><br/>
+        <small>Data de publicação: {{date}}</small>
+    </div>
+{{/each}}
