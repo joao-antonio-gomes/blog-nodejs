@@ -6,16 +6,17 @@ const Categoria = mongoose.model('categorias')
 require('../models/PostagemModel')
 const Postagem = mongoose.model('postagens')
 const {body, validationResult} = require('express-validator')
+const {isAdmin} = require('../../helpers/isAdmin')
 
-router.get('/', (req, res) => {
+router.get('/', isAdmin, (req, res) => {
     res.render('admin/index')
 })
 
-router.get('/posts', (req, res) => {
+router.get('/posts', isAdmin, (req, res) => {
     res.send('Página de posts')
 })
 
-router.get('/categorias', (req, res) => {
+router.get('/categorias', isAdmin, (req, res) => {
     Categoria.find().lean().sort({nome: 'asc'}).then(categorias => {
         res.render('admin/categorias', {
             categorias: categorias,
@@ -26,11 +27,11 @@ router.get('/categorias', (req, res) => {
     })
 })
 
-router.get('/categorias/add', (req, res) => {
+router.get('/categorias/add', isAdmin, (req, res) => {
     res.render('admin/addcategorias')
 })
 
-router.get('/categorias/edit/:id', (req, res) => {
+router.get('/categorias/edit/:id', isAdmin, (req, res) => {
     Categoria.findById(req.params.id)
         .then(categoria => {
             res.render('admin/editcategorias', {
@@ -44,7 +45,7 @@ router.get('/categorias/edit/:id', (req, res) => {
     })
 })
 
-router.post('/categorias/edit',
+router.post('/categorias/edit', isAdmin,
     body('nome').not().isEmpty().withMessage('Favor definir um nome para categoria!'),
     body('slug').not().isEmpty().withMessage('Favor definir um slug (url) para categoria!'),
     (req, res) => {
@@ -76,7 +77,7 @@ router.post('/categorias/edit',
     })
 
 
-router.post('/categorias/nova',
+router.post('/categorias/nova', isAdmin,
     body('nome').not().isEmpty().withMessage('Favor definir um nome para categoria!'),
     body('slug').not().isEmpty().withMessage('Favor definir um slug (url) para categoria!'),
     (req, res) => {
@@ -110,7 +111,7 @@ router.post('/categorias/nova',
             })
     })
 
-router.post('/categorias/delete', (req, res) => {
+router.post('/categorias/delete', isAdmin, (req, res) => {
     Categoria.deleteOne({_id: req.body.id})
         .then(() => {
             req.flash('success_msg', 'Categoria deletada com sucesso!')
@@ -122,7 +123,7 @@ router.post('/categorias/delete', (req, res) => {
         })
 })
 
-router.get('/postagens', (req, res) => {
+router.get('/postagens', isAdmin, (req, res) => {
     Postagem.find().populate('categoria').sort({data: 'desc'}).lean().then((postagens) => {
         res.render('admin/postagens', {
             postagens: postagens,
@@ -135,7 +136,7 @@ router.get('/postagens', (req, res) => {
 
 })
 
-router.get('/postagens/add', (req, res) => {
+router.get('/postagens/add', isAdmin, (req, res) => {
     Categoria.find().lean().then((categorias) => {
         res.render('admin/addpostagens', {categorias: categorias})
     })
@@ -145,7 +146,7 @@ router.get('/postagens/add', (req, res) => {
         })
 })
 
-router.post('/postagens/nova',
+router.post('/postagens/nova', isAdmin,
     body('titulo').not().isEmpty().withMessage('Favor definir um titulo para postagem!'),
     body('slug').not().isEmpty().withMessage('Favor definir um slug (url) para postagem!'),
     body('descricao').not().isEmpty().withMessage('Favor definir uma descrição para postagem!'),
@@ -184,7 +185,7 @@ router.post('/postagens/nova',
         }
     })
 
-router.get('/postagens/edit/:id', (req, res) => {
+router.get('/postagens/edit/:id', isAdmin, (req, res) => {
     Postagem.findById(req.params.id).lean().then(postagem => {
         Categoria.find().lean().then(categorias => {
             res.render('admin/editpostagens', {
@@ -208,7 +209,7 @@ router.get('/postagens/edit/:id', (req, res) => {
         })
 })
 
-router.post('/postagens/edit',
+router.post('/postagens/edit', isAdmin,
     body('titulo').not().isEmpty().withMessage('Favor definir um titulo para postagem!'),
     body('slug').not().isEmpty().withMessage('Favor definir um slug (url) para postagem!'),
     body('descricao').not().isEmpty().withMessage('Favor definir uma descrição para postagem!'),
@@ -246,7 +247,7 @@ router.post('/postagens/edit',
         }
     })
 
-router.post('/postagens/delete', (req, res) => {
+router.post('/postagens/delete', isAdmin, (req, res) => {
     Postagem.deleteOne({_id: req.body.id}).then(() => {
         req.flash('success_msg', 'Postagem deletada com sucesso!')
         res.redirect('/admin/postagens')
