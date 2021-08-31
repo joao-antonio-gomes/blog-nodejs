@@ -51,7 +51,8 @@ app.engine('handlebars', handlebars({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
 
 //mongoose
-mongoose.connect(db.mongoURI, {
+const port = process.env.PORT || 3000;
+mongoose.connect(port, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
